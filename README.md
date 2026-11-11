@@ -4,7 +4,7 @@ A customer management website built with **Laravel** for BCS3453 Integrated Appl
 
 It stores customer records in a MySQL database, fills the table with 100 fake customers generated with **Faker**, and shows them in a table with filters by gender and birthday.
 
-**Author:** Adeeb Irfaan (CB23061)
+**Author:** Group 10
 
 ## Features
 

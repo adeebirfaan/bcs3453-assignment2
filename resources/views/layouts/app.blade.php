@@ -23,7 +23,7 @@
             <a class="wordmark" href="{{ route('customers.index') }}" aria-label="Customer register, home">
                 Customer register <span class="wordmark__course">BCS3453</span>
             </a>
-            <span class="topbar__meta"><strong>Adeeb Irfaan</strong>, CB23061</span>
+            <span class="topbar__meta"><strong>Group 10</strong></span>
         </div>
     </header>
 
