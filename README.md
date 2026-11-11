@@ -1,58 +1,139 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Customer Management Website
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A customer management website built with **Laravel** for BCS3453 Integrated Application Development Framework, Assignment 2.
 
-## About Laravel
+It stores customer records in a MySQL database, fills the table with 100 fake customers generated with **Faker**, and shows them in a table with filters by gender and birthday.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+**Author:** Adeeb Irfaan (CB23061)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- 100 fake customer records generated with a Laravel Factory, Faker and a Seeder
+- Customer table with Name, Email, Address, Phone Number, Gender and Birthday
+- Filter by **gender** (Male or Female)
+- Filter by **birthday** (customers born after the year 2000)
+- Both filters can be combined
+- 10 customers per page, with pagination
+- Works on desktop and phone screens
 
-## Learning Laravel
+## Built with
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Laravel 13 (PHP 8.3)
+- MySQL (through XAMPP)
+- Blade templates and plain CSS
+- FakerPHP
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Getting started
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+### Requirements
 
-## Agentic Development
+- PHP 8.3 or newer
+- Composer
+- MySQL (for example from XAMPP)
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### Installation
 
-```bash
-composer require laravel/boost --dev
+1. Clone the repository and open the folder:
+   ```bash
+   git clone <repository-url>
+   cd customer-app
+   ```
 
-php artisan boost:install
+2. Install the PHP packages:
+   ```bash
+   composer install
+   ```
+
+3. Create the environment file and an app key:
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+   On Windows Command Prompt, use `copy .env.example .env` instead of `cp`.
+
+4. Start MySQL and create a database named `customer_db` (for example in phpMyAdmin).
+   The connection settings in `.env` are:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=customer_db
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
+
+5. Create the tables and generate the 100 customers:
+   ```bash
+   php artisan migrate --seed
+   ```
+   To start again with fresh data at any time:
+   ```bash
+   php artisan migrate:fresh --seed
+   ```
+
+6. Start the server:
+   ```bash
+   php artisan serve
+   ```
+   Open http://127.0.0.1:8000 in your browser.
+
+## Pages and filters
+
+All pages use the same route, `/customers`. Filters are added to the URL:
+
+| Page | URL |
+|---|---|
+| All customers | `/customers` |
+| Male customers | `/customers?gender=Male` |
+| Female customers | `/customers?gender=Female` |
+| Born after 2000 | `/customers?birthday=after2000` |
+| Female and born after 2000 | `/customers?gender=Female&birthday=after2000` |
+| Next page | add `&page=2` (or `?page=2`) |
+
+"Born after 2000" means born in 2001 or later.
+
+## Project structure (MVC)
+
+```
+app/
+├── Http/Controllers/
+│   └── CustomerController.php      Controller: reads the filters, queries the data, returns the view
+└── Models/
+    └── Customer.php                Model: fillable fields, birthday date cast, gender() and bornAfter() filters
+
+database/
+├── migrations/
+│   └── ..._create_customers_table.php   Creates the customers table
+├── factories/
+│   └── CustomerFactory.php              Faker data for one customer
+└── seeders/
+    ├── CustomerSeeder.php               Creates 100 customers
+    └── DatabaseSeeder.php               Runs CustomerSeeder
+
+resources/views/
+├── layouts/
+│   └── app.blade.php                    Shared page layout (head and top bar)
+└── customers/
+    ├── index.blade.php                  Filter form and customer table
+    └── partials/
+        └── pagination.blade.php         Page links
+
+routes/
+└── web.php                              Route for /customers
+
+public/css/
+└── app.css                              Styles
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Database table: `customers`
 
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Column | Type | Description |
+|---|---|---|
+| `id` | big integer | Primary key, auto increment |
+| `name` | string | Customer name |
+| `email` | string, unique | Email address |
+| `address` | text | Full address |
+| `phoneNumber` | string | Phone number, stored as text to keep `+`, `-` and brackets |
+| `gender` | enum (`Male`, `Female`) | Customer gender |
+| `birthday` | date | Date of birth |
+| `created_at`, `updated_at` | timestamp | Added by Laravel |
